@@ -1,5 +1,6 @@
 # Purpose
-A customized version of solr & zookeeper [Helm Charts](https://github.com/helm/charts) for migrating existing solrcloud onto k8s environment.
+- A customized version of solr & zookeeper [Helm Charts](https://github.com/helm/charts).
+- This customized version can be used to migrate existing solrcloud onto k8s environment.
 
 # Base version
 - /incubator/solr
