@@ -97,6 +97,8 @@ spec:
                 {{- end }}
               {{- end }}
             {{- end }}
+            - name: config
+              mountPath: /config-scripts
 
 
 {{- if .Values.exporters.jmx.enabled }}
@@ -170,6 +172,10 @@ spec:
 {{ toYaml . | indent 8 }}
     {{- end }}
       volumes:
+        - name: config
+          configMap:
+            name: {{ template "zookeeper.fullname" . }}
+            defaultMode: 0555
         {{- range .Values.secrets }}
         - name: {{ $.Release.Name }}-{{ .name }}
           secret:

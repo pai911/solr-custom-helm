@@ -25,6 +25,9 @@ image:
   tag: v3  # Container image tag for zookeeper container.
   pullPolicy: IfNotPresent  # Image pull criteria for zookeeper container.
 
+#Existing zk servers
+existingZKEssenble: []
+
 service:
   type: ClusterIP  # Exposes zookeeper on a cluster-internal IP.
   annotations: {}  # Arbitrary non-identifying metadata for zookeeper service.
@@ -92,7 +95,8 @@ podLabels: {}  # Key/value pairs that are attached to zookeeper pods.
 livenessProbe:
   exec:
     command:
-      - zkOk.sh
+      - sh
+      - /config-scripts/ok
   initialDelaySeconds: 20
   # periodSeconds: 30
   # timeoutSeconds: 30
@@ -102,7 +106,8 @@ livenessProbe:
 readinessProbe:
   exec:
     command:
-      - zkOk.sh
+      - sh
+      - /config-scripts/ready
   initialDelaySeconds: 20
   # periodSeconds: 30
   # timeoutSeconds: 30
@@ -117,7 +122,7 @@ securityContext:
 command:
   - /bin/bash
   - -xec
-  - zkGenConfig.sh && exec zkServer.sh start-foreground
+  - /config-scripts/run && exec zkServer.sh start-foreground
 
 ## Useful if using any custom authorizer.
 ## Pass any secrets to the kafka pods. Each secret will be passed as an
@@ -290,7 +295,7 @@ env:
 
   ## The number of Ticks that an ensemble member is allowed to perform leader
   ## election.
-  ZK_INIT_LIMIT: 5
+  ZK_INIT_LIMIT: 10
 
   ## The Log Level that for the ZooKeeper processes logger.
   ## Choices are `TRACE,DEBUG,INFO,WARN,ERROR,FATAL`.
@@ -319,7 +324,7 @@ env:
   ZK_SNAP_RETAIN_COUNT: 3
 
   ## The number of Tick by which a follower may lag behind the ensembles leader.
-  ZK_SYNC_LIMIT: 10
+  ZK_SYNC_LIMIT: 5
 
   ## The number of wall clock ms that corresponds to a Tick for the ensembles
   ## internal time.

@@ -55,6 +55,12 @@ spec:
             items:
               - key: solr.xml
                 path: solr.xml
+        - name: copy-mmseg-script
+          configMap:
+            name: copy-mmseg-script
+            items:
+              - key: copy-jar.sh
+                path: copy-jar.sh
       initContainers:
         - name: check-zk
           image: busybox:latest
@@ -70,7 +76,7 @@ spec:
                     echo $line;
                     mode=$(echo srvr | nc $line 2181 | grep "Mode");
                     echo $mode;
-                    if [ "$mode" = "Mode: leader" ] || [ "$mode" = "Mode: standalone" ]; then
+                    if [ "$mode" == "Mode: follower" ] || [ "$mode" = "Mode: leader" ] || [ "$mode" = "Mode: standalone" ]; then
                       echo "Found a leader!";
                       exit 0;
                     fi;
@@ -151,6 +157,10 @@ spec:
               value: "/opt/solr/server/home"
             - name: "SOLR_PORT"
               value: "{{ .Values.port }}"
+{{- if not ( eq .Values.gcTune  "" ) }}
+            - name: "GC_TUNE"
+              value: "{{ .Values.gcTune }}"
+{{- end }}
             - name: "POD_HOSTNAME"
               valueFrom:
                 fieldRef:
@@ -158,7 +168,7 @@ spec:
             - name: "SOLR_HOST"
               value: "$(POD_HOSTNAME).{{ include "solr.headless-service-name" . }}.{{ .Release.Namespace }}"
             - name: "ZK_HOST"
-              value: "{{ include "solr.zookeeper-service-name" . }}:2181"
+              value: "{{ include "solr.zookeeper-service-name" . }}:2181 {{- range .Values.existingZKEssenble }},{{ . }}{{- end }}"
             - name: "SOLR_LOG_LEVEL"
               value: "{{ .Values.logLevel }}"
 {{- if .Values.extraEnvVars }}
@@ -185,6 +195,7 @@ spec:
           livenessProbe:
             initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
             periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
             httpGet:
               scheme: "{{ .Values.tls.enabled | ternary "HTTPS" "HTTP" }}"
               path: /solr/admin/info/system
@@ -192,6 +203,7 @@ spec:
           readinessProbe:
             initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
             periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
             httpGet:
               scheme: "{{ .Values.tls.enabled | ternary "HTTPS" "HTTP" }}"
               path: /solr/admin/info/system
@@ -199,6 +211,8 @@ spec:
           volumeMounts:
             - name: {{ include "solr.pvc-name" . }}
               mountPath: /opt/solr/server/home
+            - name: copy-mmseg-script
+              mountPath: /docker-entrypoint-initdb.d
 {{ if .Values.tls.enabled }}
             - name: "keystore-volume"
               mountPath: "/etc/ssl/keystores"

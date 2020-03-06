@@ -1,0 +1,16 @@
+---
+
+apiVersion: "v1"
+kind: "ConfigMap"
+metadata:
+  name: "copy-mmseg-script"
+  labels:
+{{ include "solr.common.labels" . | indent 4}}
+data:
+  copy-jar.sh: |
+    #!/bin/bash
+    set -e
+    mkdir -p /opt/solr/server/home/lib
+    wget -O /opt/solr/server/home/lib/mmseg4j-solr-2.4.0.jar https://github.com/pai911/solr-deploy/raw/master/mmseg/mmseg4j-solr-2.4.0.jar
+    wget -O /opt/solr/server/home/lib/mmseg4j-core-1.10.0.jar https://github.com/pai911/solr-deploy/raw/master/mmseg/mmseg4j-core-1.10.0.jar
+    echo "this is running inside the container before Solr starts"

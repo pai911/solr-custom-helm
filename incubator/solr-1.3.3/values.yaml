@@ -16,6 +16,8 @@ replicaCount: 3
 # Settings for solr java memory
 javaMem: "-Xms2g -Xmx3g"
 
+gcTune: ""
+
 # Set the limits and requests on solr pod resources
 resources: {}
 
@@ -38,16 +40,20 @@ image:
   # pullSecrets:
   #   - myRegistryKeySecretName
 
+#Existing zk servers
+existingZKEssenble: []
 
 # Solr pod liveness
 livenessProbe:
   initialDelaySeconds: 45
   periodSeconds: 10
+  timeoutSeconds: 1
 
 # Solr pod readiness
 readinessProbe:
   initialDelaySeconds: 15
   periodSeconds: 5
+  timeoutSeconds: 1
 
 # Annotations to apply to the solr pods
 podAnnotations: {}
