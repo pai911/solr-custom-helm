@@ -80,7 +80,7 @@ zookeeper:
         - topologyKey: "kubernetes.io/hostname"
           labelSelector:
             matchLabels:
-              release: zookeeper
+              app: zookeeper
   persistence:
     size: 2Gi
   env:
