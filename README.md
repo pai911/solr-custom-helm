@@ -7,8 +7,16 @@ A customized version of solr & zookeeper Helm package for migrating existing sol
 - /incubator/zookeeper (Chart version: "1.3.3")
     - forked from: https://github.com/helm/charts/tree/12fd864e017029d91a0d01d1449ad721be1eaf6f/incubator/zookeeper
 
+ # Getting Started
+ - `helm dep up`
+   - If you have changed anything under /incubator/zookeeper, you should run this command
+   - This will pack zookeeper under /charts.
+ - `helm install solr -f solr-deploy-vars.yaml .`
+   - This will install solr with custom values defined in `solr-deploy-vars.yaml`
+ 
 # Sample value.xml
 
+## Solr chart params
 ```
 image:
   tag: 7.7.1
@@ -55,7 +63,10 @@ affinity:
         labelSelector:
           matchLabels:
             app.kubernetes.io/name: solr
+```
 
+## Zookeepr subchart params
+```
 zookeeper:
   replicaCount: 1
   image:
@@ -92,10 +103,3 @@ zookeeper:
   env:
     ZK_HEAP_SIZE: 256m
 ```
- 
- # Getting Started
- - `helm dep up`
-   - If you have changed anything under /incubator/zookeeper, you should run this command
-   - This will pack zookeeper under /charts.
- - `helm install solr -f solr-deploy-vars.yaml .`
-   - This will install solr with custom values defined in `solr-deploy-vars.yaml`
