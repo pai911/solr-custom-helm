@@ -1,12 +1,22 @@
-# Purpose
-- A customized version of solr & zookeeper [Helm Charts](https://github.com/helm/charts).
-- This customized version can be used to migrate existing solrcloud onto k8s environment.
+This is a customized version of solr & zookeeper v1.3.3 [Helm Charts](https://github.com/helm/charts).
+
+# Use Case
+I customize the Helm packages so I can migrate an existing solrcloud onto k8s environment without experiencing downtime.
+
+The following is the use case for this project.
+- An existing solrcloud running on a zookeeper essemble which you want to migrate onto k8s.
+- You don't want your data service to experience downtime during the migration.
+
+We cannot just the back and restore cause there will be downtime.
+The better way would be scale the existing solrcloud out onto k8s, and then gradually remove previous solr & zookeeper instances.
+The current zookeeper Helm package creates an independent essenble in k8s.
+
 
 # Base version
 - /incubator/solr
-    - forked from: [Solr Helm Chart 1.3.3](https://github.com/helm/charts/tree/2a51fa09894f739866e57b9df267c5fd1a665f33/incubator/solr)
+    - forked from: [Solr Helm Chart 1.3.3](https://github.com/helm/charts/tree/2a51fa09894f739866e57b9df267c5fd1a665f33/incubator/solr) Solr 7.7.2
 - /incubator/zookeeper
-    - forked from: [Zookeeper Helm Chart 1.3.3](https://github.com/helm/charts/tree/12fd864e017029d91a0d01d1449ad721be1eaf6f/incubator/zookeeper)
+    - forked from: [Zookeeper Helm Chart 1.3.3](https://github.com/helm/charts/tree/12fd864e017029d91a0d01d1449ad721be1eaf6f/incubator/zookeeper) Zookeeper 3.4.10
 
  # Getting Started
  - `helm dep up`
