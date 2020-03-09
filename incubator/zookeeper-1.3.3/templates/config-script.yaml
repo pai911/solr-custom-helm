@@ -84,7 +84,9 @@ data:
               exit 1
           fi
 
-          MY_ID=$((ORD+1 + 3))
+          len={{ len .Values.existingZKEssenble }}
+
+          MY_ID=$((ORD+1 + len))
           echo "ZK_REPLICAS=$ZK_REPLICAS"
           echo "MY_ID=$MY_ID"
           echo "ZK_LOG_LEVEL=$ZK_LOG_LEVEL"
