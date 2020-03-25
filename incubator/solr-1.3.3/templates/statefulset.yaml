@@ -157,10 +157,6 @@ spec:
               value: "/opt/solr/server/home"
             - name: "SOLR_PORT"
               value: "{{ .Values.port }}"
-{{- if not ( eq .Values.gcTune  "" ) }}
-            - name: "GC_TUNE"
-              value: "{{ .Values.gcTune }}"
-{{- end }}
             - name: "POD_HOSTNAME"
               valueFrom:
                 fieldRef:

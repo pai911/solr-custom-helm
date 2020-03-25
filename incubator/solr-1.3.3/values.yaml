@@ -16,8 +16,6 @@ replicaCount: 3
 # Settings for solr java memory
 javaMem: "-Xms2g -Xmx3g"
 
-gcTune: ""
-
 # Set the limits and requests on solr pod resources
 resources: {}
 
